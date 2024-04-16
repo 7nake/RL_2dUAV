@@ -194,12 +194,7 @@ class UavEnv(gym.Env):
 
     # 障碍物
     plt.plot([250], [75], "x", markersize=10)
-    plt.plot([700], [-75], "x", markersize=10)
-    plt.plot([1200], [70], "x", markersize=10)
-    plt.plot([1600], [-50], "x", markersize=10)
-    plt.plot([2100], [80], "x", markersize=10)
-    plt.plot([2600], [-50], "x", markersize=10)
-    plt.plot([3000], [85], "x", markersize=10)
+
     # plt.scatter([250], [250], s=8,marker="x")
 
     #plt.plot(self.waypoints[:,0], self.waypoints[:,1])
