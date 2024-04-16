@@ -3,7 +3,7 @@ import gym
 from gym import spaces
 from stable_baselines3 import DQN, PPO, A2C
 import time
-# import cv2
+import cv2
 from funcs import *
 from matplotlib import pyplot as plt
 from Aircraft3dof2 import Aircraft
@@ -140,7 +140,7 @@ class UavEnv(gym.Env):
   def reset(self,init=0, final=0, train=True):
     self.a = 0
     self.waypoints = waypointGenerator(np.random.randint(4))
-    self.waypoints = waypointGenerator(4)
+    self.waypoints = waypointGenerator(0)
     #self.waypoints = helicalWaypointGenerator()
     self.initial_conditions = self.waypoints[np.random.randint(10)+10] # Initial Conditions [x,y,psi,v]
 
@@ -154,6 +154,7 @@ class UavEnv(gym.Env):
     aic_psi = self.Aircraft.aic[2]
     aic_v = self.Aircraft.aic[3]
 
+    # obs? [10*3][keypoint_index,distance,anger_distance]
     obs = observationWaypoint(aic_x, aic_y, self.waypoints[:,0], self.waypoints[:,1])
 
     #Observation[]--------------------------------------------
@@ -178,6 +179,7 @@ class UavEnv(gym.Env):
     observation = np.append(observation, wrap(obs_1[0])/np.pi)
     observation = np.append(observation, wrap(obs_2[0])/np.pi)
     observation = np.append(observation, obs_3[0])
+    # print(observation)
 
     return observation
 
@@ -189,10 +191,16 @@ class UavEnv(gym.Env):
     plt.plot(self.Aircraft.x_vals[0],self.Aircraft.y_vals[0],'og', markersize=10)
     plt.plot(self.Aircraft.x_vals[-1],self.Aircraft.y_vals[-1],'ob', markersize=10)
     plt.scatter(self.waypoints[:,0], self.waypoints[:,1], s = 8)
+
+    # 障碍物
+    plt.plot([250], [75], "x", markersize=10)
+
+    # plt.scatter([250], [250], s=8,marker="x")
+
     #plt.plot(self.waypoints[:,0], self.waypoints[:,1])
     plt.xlabel('X (m)', fontsize=10)
     plt.ylabel('Y (m)', fontsize=10)
-    plt.legend(["Aircraft Trajectory", "Initial Point", "Final Point", "Waypoints"], loc='lower right',prop={'size': 8})
+    plt.legend(["Aircraft Trajectory", "Initial Point", "Final Point", "Waypoints", "Obstacle"], loc='lower right',prop={'size': 8})
     plt.grid()
     #plt.savefig('xy.png') 
     plt.show()
